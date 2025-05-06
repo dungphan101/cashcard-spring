@@ -63,7 +63,6 @@ jobs:
           IMAGE_NAME: cashcard-app
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          ls -la build/libs
           ./gradlew build --parallel
           ls -la build/libs
           docker build -t ${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
