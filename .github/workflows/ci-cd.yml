@@ -14,17 +14,26 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
+          cache: 'gradle'
 
       - name: Grant execute permission for Gradle
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean build --parallel
 
       - name: Run unit tests
         run: ./gradlew test
@@ -53,9 +62,11 @@ jobs:
           ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_NUMBER }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           IMAGE_NAME: cashcard-app
         run: |
+          ./gradlew build
+          ls -la build/libs
           docker build -t ${{ env.ECR_REGISTRY}}:${{env.IMAGE_NAME}} .
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-          
+
         #   docker tag $ECR_REPOSITORY:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
           
 
