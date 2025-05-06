@@ -62,12 +62,10 @@ jobs:
           ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_NUMBER }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           IMAGE_NAME: cashcard-app
         run: |
-          ./gradlew build
+          ./gradlew build --parallel
           ls -la build/libs
           docker build -t ${{ env.ECR_REGISTRY}}:${{env.IMAGE_NAME}} .
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-
-        #   docker tag $ECR_REPOSITORY:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
           
 
     #   - name: Deploy to ECS

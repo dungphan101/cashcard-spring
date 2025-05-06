@@ -1,4 +1,4 @@
 FROM openjdk:21
-COPY build/libs/*.jar app.jar
+COPY build/libs/cashcard-app-1.0.0.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 

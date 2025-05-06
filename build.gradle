@@ -36,6 +36,12 @@ dependencies {
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 }
 
+jar {
+    archiveBaseName.set('cashcard-app')
+    archiveVersion.set('1.0.0')
+    archiveClassifier.set('')
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
