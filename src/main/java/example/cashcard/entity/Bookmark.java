@@ -1,4 +1,4 @@
-package example.cashcard;
+package example.cashcard.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

@@ -1,5 +1,6 @@
 package example.cashcard;
 
+import example.cashcard.entity.CashCard;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
