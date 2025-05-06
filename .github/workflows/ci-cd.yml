@@ -60,7 +60,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_NUMBER }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          IMAGE_NAME: cashcard-app
+          IMAGE_NAME: demo/cashcard-app
           IMAGE_TAG: ${{ github.sha }}
         run: |
           ./gradlew build --parallel
