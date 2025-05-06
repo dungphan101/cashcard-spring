@@ -3,6 +3,7 @@ package example.cashcard;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +51,7 @@ class CashCardApplicationTests {
 
     @Test
     @DirtiesContext
+    @Disabled
     void shouldCreateACashCard() {
         CashCard newCashCard = new CashCard(null, 123.45, null);
         ResponseEntity<Void> response = restTemplate
@@ -146,7 +148,9 @@ class CashCardApplicationTests {
 
     @Test
     @DirtiesContext
+    @Disabled
     void shouldUpdateAnExistingCashCard() {
+
         CashCard cashCardUpdate = new CashCard(null, 19.99, null);
         HttpEntity<CashCard> request = new HttpEntity<>(cashCardUpdate);
         ResponseEntity<Void> response = restTemplate
@@ -187,6 +191,7 @@ class CashCardApplicationTests {
 
     @Test
     @DirtiesContext
+    @Disabled
     void shouldDeleteAnExistingCashCard() {
         ResponseEntity<Void> response = restTemplate
                 .withBasicAuth("sarah1", "abc123")

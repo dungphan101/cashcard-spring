@@ -36,11 +36,11 @@ public class CashCardController {
 
     @PostMapping
     private ResponseEntity<Void> createCashCard(@RequestBody CashCard cashCard, UriComponentsBuilder uriBuilder, Principal principal) {
-        CashCard cashCardWithOwner = new CashCard(null, cashCard.amount(), principal.getName());
+        CashCard cashCardWithOwner = new CashCard(null, cashCard.getAmount(), principal.getName());
         CashCard savedCashCard = cashCardRepository.save(cashCardWithOwner);
         URI locationOfNewCashCard = uriBuilder
                 .path("cashcards/{id}")
-                .buildAndExpand(savedCashCard.id())
+                .buildAndExpand(savedCashCard.getId())
                 .toUri();
         return ResponseEntity.created(locationOfNewCashCard).build();
     }
@@ -61,7 +61,7 @@ public class CashCardController {
         if (cashCard == null) {
             return ResponseEntity.notFound().build();
         }
-        CashCard updatedCashCard = new CashCard(cashCard.id(), cashCardUpdate.amount(), principal.getName());
+        CashCard updatedCashCard = new CashCard(cashCard.getId(), cashCardUpdate.getAmount(), principal.getName());
         cashCardRepository.save(updatedCashCard);
         return ResponseEntity.noContent().build();
     }
