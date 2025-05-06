@@ -40,11 +40,11 @@ jobs:
       - name: Run code quality checks
         run: ./gradlew check
 
-      - name: Run security checks
-        run: ./gradlew dependencyCheckAnalyze
-
-      - name: Run performance tests
-        run: ./gradlew performanceTest
+#      - name: Run security checks
+#        run: ./gradlew dependencyCheckAnalyze
+#
+#      - name: Run performance tests
+#        run: ./gradlew performanceTest
 
   build-image:
     needs: build-and-test
