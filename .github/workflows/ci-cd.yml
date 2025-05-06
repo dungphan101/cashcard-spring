@@ -74,7 +74,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: cashcard-task-def-revision1.json
+          task-definition: .github/ecs/cashcard-task-def-revision1.json
           container-name: ${{ secrets.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
