@@ -90,7 +90,7 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Upload task definition as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: task-definition
           path: ${{ steps.task-def.outputs.task-definition }}
@@ -104,7 +104,7 @@ jobs:
 
     steps:
       - name: Download task definition
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
           name: task-definition
           path: ./
