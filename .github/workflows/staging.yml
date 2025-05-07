@@ -3,11 +3,9 @@ name: Staging CI/CD Pipeline
 on:
   push:
     branches:
-      - main
-      - uat
       - staging
     paths-ignore:
-      - "src/main/resources/db/migration/**"
+        - "../src/main/resources/db/migration/**.sql"
 
 jobs:
   build-and-test:

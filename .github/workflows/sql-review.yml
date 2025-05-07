@@ -4,11 +4,11 @@ on:
   pull_request:
     branches:
       - staging
-      - staging-*
       - uat
-      - uat-*
+      - main
     paths:
-      - "src/main/resources/db/migrations/**"
+      - "src/main/resources/db/migration/**.sql"
+      - "resources/db/migration/**.sql"
 
 jobs:
   check-release-on-staging:
@@ -21,7 +21,7 @@ jobs:
       BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
       BYTEBASE_PROJECT: "projects/project-cash-card"
       BYTEBASE_TARGETS: "instances/mysql-staging-instance/databases/cashcard"
-      FILE_PATTERN: "resources/db/migrations/*.sql"
+      FILE_PATTERN: "src/main/resources/db/migration/**/*.sql"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
       BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
       BYTEBASE_PROJECT: "projects/project-cash-card"
       BYTEBASE_TARGETS: "instances/mysql-uat-instance/databases/cashcard"
-      FILE_PATTERN: "resources/db/migrations/*.sql"
+      FILE_PATTERN: "src/main/resources/db/migration/**/*.sql"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -88,7 +88,7 @@ jobs:
       BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
       BYTEBASE_PROJECT: "projects/project-cash-card"
       BYTEBASE_TARGETS: "instances/mysql-production-instance/databases/cashcard"
-      FILE_PATTERN: "resources/db/migrations/*.sql"
+      FILE_PATTERN: "src/main/resources/db/migration/**/*.sql"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
