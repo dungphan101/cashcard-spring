@@ -1,135 +1,135 @@
-name: Staging CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - staging
-    paths-ignore:
-      - "src/main/resources/db/migration/**"
-
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'gradle'
-
-      - name: Grant execute permission for Gradle
-        run: chmod +x ./gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew clean build --parallel
-
-      - name: Run unit tests and integration tests
-        run: ./gradlew test
-
-      - name: Run code quality checks
-        run: ./gradlew check
-
-  #      - name: Run security checks
-  #        run: ./gradlew dependencyCheckAnalyze
-  #
-  #      - name: Run performance tests
-  #        run: ./gradlew performanceTest
-
-  build-image:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.build-image.outputs.image }}
-      task-definition: ${{ steps.task-def.outputs.task-definition }}
-
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_NAME: demo/cashcard-app
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          ./gradlew build --parallel
-          ls -la build/libs
-          docker build -t ${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
-          docker push ${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          echo "image=${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: .github/ecs/cashcard-task-def-revision1.json
-          container-name: ${{ secrets.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
-
-      - name: Upload task definition as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: task-definition
-          path: ${{ steps.task-def.outputs.task-definition }}
-
-  deploy:
-    needs: build-image
-    runs-on: ubuntu-latest
-    environment:
-      name: staging
-    #      url: https://staging.yourdomain.cm
-
-    steps:
-      - name: Download task definition
-        uses: actions/download-artifact@v4
-        with:
-          name: task-definition
-          path: ./
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-#      - name: Deploy Amazon ECS task definition
-#        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-#        with:
-#          task-definition: ./task-definition.json
-#          service: ${{ secrets.ECS_SERVICE }}
-#          cluster: ${{ secrets.ECS_CLUSTER }}
-#          wait-for-service-stability: true
+#name: Staging CI/CD Pipeline
 #
-#      - name: Verify Service is Running
+#on:
+#  push:
+#    branches:
+#      - staging
+#    paths-ignore:
+#      - "src/main/resources/db/migration/**"
+#
+#jobs:
+#  build-and-test:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout source
+#        uses: actions/checkout@v3
+#
+#      - name: Cache Gradle dependencies
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.gradle/caches
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
+#
+#      - name: Set up JDK
+#        uses: actions/setup-java@v3
+#        with:
+#          distribution: 'temurin'
+#          java-version: '21'
+#          cache: 'gradle'
+#
+#      - name: Grant execute permission for Gradle
+#        run: chmod +x ./gradlew
+#
+#      - name: Build with Gradle
+#        run: ./gradlew clean build --parallel
+#
+#      - name: Run unit tests and integration tests
+#        run: ./gradlew test
+#
+#      - name: Run code quality checks
+#        run: ./gradlew check
+#
+#  #      - name: Run security checks
+#  #        run: ./gradlew dependencyCheckAnalyze
+#  #
+#  #      - name: Run performance tests
+#  #        run: ./gradlew performanceTest
+#
+#  build-image:
+#    needs: build-and-test
+#    runs-on: ubuntu-latest
+#    outputs:
+#      image: ${{ steps.build-image.outputs.image }}
+#      task-definition: ${{ steps.task-def.outputs.task-definition }}
+#
+#    steps:
+#      - name: Checkout source
+#        uses: actions/checkout@v3
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v2
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v2
+#
+#      - name: Build, tag, and push image to Amazon ECR
+#        id: build-image
+#        env:
+#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#          IMAGE_NAME: demo/cashcard-app
+#          IMAGE_TAG: ${{ github.sha }}
 #        run: |
-#          aws ecs describe-services \
-#            --cluster ${{ secrets.ECS_CLUSTER }} \
-#            --services ${{ secrets.ECS_SERVICE }} \
-#            --query "services[0].runningCount" \
-#            --output text
+#          ./gradlew build --parallel
+#          ls -la build/libs
+#          docker build -t ${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+#          docker push ${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+#          echo "image=${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
+#
+#      - name: Fill in the new image ID in the Amazon ECS task definition
+#        id: task-def
+#        uses: aws-actions/amazon-ecs-render-task-definition@v1
+#        with:
+#          task-definition: .github/ecs/cashcard-task-def-revision1.json
+#          container-name: ${{ secrets.CONTAINER_NAME }}
+#          image: ${{ steps.build-image.outputs.image }}
+#
+#      - name: Upload task definition as artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: task-definition
+#          path: ${{ steps.task-def.outputs.task-definition }}
+#
+#  deploy:
+#    needs: build-image
+#    runs-on: ubuntu-latest
+#    environment:
+#      name: staging
+#    #      url: https://staging.yourdomain.cm
+#
+#    steps:
+#      - name: Download task definition
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: task-definition
+#          path: ./
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v2
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+##      - name: Deploy Amazon ECS task definition
+##        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+##        with:
+##          task-definition: ./task-definition.json
+##          service: ${{ secrets.ECS_SERVICE }}
+##          cluster: ${{ secrets.ECS_CLUSTER }}
+##          wait-for-service-stability: true
+##
+##      - name: Verify Service is Running
+##        run: |
+##          aws ecs describe-services \
+##            --cluster ${{ secrets.ECS_CLUSTER }} \
+##            --services ${{ secrets.ECS_SERVICE }} \
+##            --query "services[0].runningCount" \
+##            --output text
