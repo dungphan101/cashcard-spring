@@ -10,11 +10,12 @@ on:
       - "resources/db/migrations/*.sql"
   push:
     branches:
-      - staging*
-      - uat*
-      - main*
+      - staging
+      - staging-*
+      - uat
+      - uat-*
     paths:
-      - "resources/db/migrations/*.sql"
+        - "resources/db/migrations/*.sql"
 
 jobs:
   check-release-on-staging:
