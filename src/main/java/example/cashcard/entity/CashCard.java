@@ -1,4 +1,4 @@
-package example.cashcard;
+package example.cashcard.entity;
 
 
 import jakarta.persistence.*;
@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "cash_card")
-class CashCard {
+public class CashCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
