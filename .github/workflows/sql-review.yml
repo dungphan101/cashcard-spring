@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       - uat
-      - main
+      - master
     paths:
       - "src/main/resources/db/migration/**.sql"
       - "resources/db/migration/**.sql"
