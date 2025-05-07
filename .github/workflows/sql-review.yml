@@ -8,7 +8,8 @@ on:
       - uat
       - uat-*
     paths:
-      - "../src/main/resources/db/migration/**.sql"
+      - "src/main/resources/db/migration/**.sql"
+      - "resources/db/migration/**.sql"
   pull_request:
     branches:
       - staging
@@ -16,7 +17,8 @@ on:
       - uat
       - uat-*
     paths:
-      - "../src/main/resources/db/migration/**.sql"
+      - "src/main/resources/db/migration/**.sql"
+      - "resources/db/migration/**.sql"
 
 jobs:
   check-release-on-staging:
