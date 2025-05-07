@@ -1,9 +1,9 @@
-name: Rollout UAT Database
+name: Rollout Production Database
 
 on:
   push:
     branches:
-      - uat
+      - master
     paths:
       - "src/main/resources/db/migration/**.sql"
       - "resources/db/migration/**.sql"
@@ -17,7 +17,7 @@ jobs:
       - name: Build app and upload
         run: |
           echo "Upload done!"
-  deploy-to-uat:
+  deploy-to-production:
     needs: build
     runs-on: ubuntu-latest # use self-hosted machines if your Bytebase runs in internal networks.
     environment: uat
@@ -70,8 +70,8 @@ jobs:
           url: ${{ env.BYTEBASE_URL }}
           token: ${{ steps.login.outputs.token }}
           plan: ${{ steps.create-plan.outputs.plan }}
-          target-stage: environments/uat # the stage environment.
+          target-stage: environments/production # the stage environment.
       - name: Deploy app
         run: |
-          echo "Deploying app to UAT environment..."
-          echo "Deploy app to UAT environment done!"
+          echo "Deploying app to production environment..."
+          echo "Deploy app to production environment done!"
