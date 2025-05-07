@@ -1,6 +1,14 @@
 name: SQL Review Policy on Staging, UAT, and Production
 
 on:
+  push:
+    branches:
+      - staging
+      - staging-*
+      - uat
+      - uat-*
+    paths:
+      - "src/main/resources/db/migrations/**"
   pull_request:
     branches:
       - staging
