@@ -1,4 +1,4 @@
-name: SQL Review Policy on Staging, UAT, and Production
+name: SQL Review Policy
 
 on:
   pull_request:
