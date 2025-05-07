@@ -31,7 +31,7 @@ jobs:
       BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
       BYTEBASE_PROJECT: "projects/project-cash-card"
       BYTEBASE_TARGETS: "instances/mysql-staging-instance/databases/cashcard"
-      FILE_PATTERN: "../src/main/resources/db/migration/**.sql"
+      FILE_PATTERN: "resources/db/migration/**.sql"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
