@@ -1,7 +1,7 @@
 name: SQL Review Policy on Staging, UAT, and Production
 
 on:
-  push:
+  pull_request:
     branches:
       - staging
       - staging-*
