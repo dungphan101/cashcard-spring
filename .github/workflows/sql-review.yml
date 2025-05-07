@@ -32,9 +32,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Debug Ngrok
-        run: |
-          curl -I https://miserably-fancy-ostrich.ngrok-free.app || echo "Ngrok tunnel is not reachable"
       - name: Login to Bytebase
         id: login
         uses: bytebase/login-action@v1
@@ -69,9 +66,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Debug Ngrok
-        run: |
-          curl -I https://miserably-fancy-ostrich.ngrok-free.app || echo "Ngrok tunnel is not reachable"
       - name: Login to Bytebase
         id: login
         uses: bytebase/login-action@v1
