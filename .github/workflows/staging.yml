@@ -5,7 +5,7 @@ on:
     branches:
       - staging
     paths-ignore:
-      - 'resources/db/migrations/*.sql'
+      - "src/main/resources/db/migration/**"
 
 jobs:
   build-and-test:
