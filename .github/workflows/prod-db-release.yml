@@ -1,0 +1,77 @@
+name: Rollout Production Database
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "src/main/resources/db/migration/**.sql"
+      - "resources/db/migration/**.sql"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build app and upload
+        run: |
+          echo "Upload done!"
+  deploy-to-production:
+    needs: build
+    runs-on: ubuntu-latest # use self-hosted machines if your Bytebase runs in internal networks.
+    environment: uat
+    env:
+      BYTEBASE_URL: https://miserably-fancy-ostrich.ngrok-free.app
+      BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
+      BYTEBASE_PROJECT: "projects/cashcard-project"
+      BYTEBASE_TARGETS: "instances/mysql-prodasia-instance/databases/operator_cashcard"
+      FILE_PATTERN: "src/main/resources/db/migration/**/*.sql"
+    outputs:
+      bytebase-plan: ${{ steps.create-plan.outputs.plan }}
+      deployment-required: ${{ steps.create-plan.outputs.deployment-required }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login to Bytebase
+        id: login
+        uses: bytebase/login-action@v1
+        with:
+          bytebase-url: ${{ env.BYTEBASE_URL }}
+          service-key: ${{ env.BYTEBASE_SERVICE_ACCOUNT }}
+          service-secret: ${{secrets.BYTEBASE_SERVICE_ACCOUNT_SECRET}} # Please use secrets for sensitive data in production.
+      - name: Create release
+        id: create-release
+        uses: bytebase/create-release-action@v1
+        with:
+          url: ${{ env.BYTEBASE_URL }}
+          token: ${{ steps.login.outputs.token }}
+          file-pattern: ${{ env.FILE_PATTERN }}
+          # fail the action if release checks report any error.
+          check-release: "FAIL_ON_ERROR"
+          project: ${{ env.BYTEBASE_PROJECT }}
+          targets: ${{ env.BYTEBASE_TARGETS }}
+          validate-only: false
+      - name: Create plan
+        id: create-plan
+        uses: bytebase/create-plan-from-release-action@v1
+        with:
+          url: ${{ env.BYTEBASE_URL }}
+          token: ${{ steps.login.outputs.token }}
+          project: ${{ env.BYTEBASE_PROJECT }}
+          release: ${{ steps.create-release.outputs.release }}
+          targets: ${{ env.BYTEBASE_TARGETS }}
+          check-plan: "SKIP"
+      - name: Rollout
+        id: rollout
+        uses: bytebase/rollout-action@v2
+        if: ${{ steps.create-plan.outputs.deployment-required == 'true' }}
+        with:
+          url: ${{ env.BYTEBASE_URL }}
+          token: ${{ steps.login.outputs.token }}
+          plan: ${{ steps.create-plan.outputs.plan }}
+          target-stage: environments/production # the stage environment.
+      - name: Deploy app
+        run: |
+          echo "Deploying app to production environment..."
+          echo "Deploy app to production environment done!"
