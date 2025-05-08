@@ -37,6 +37,9 @@ public class Bookmark {
     @Column(name = "status", nullable = false)
     private String status;
 
+    @Column(name = "is_trending", nullable = false)
+    private Boolean isTrending;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
