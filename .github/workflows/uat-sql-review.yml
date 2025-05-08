@@ -18,7 +18,7 @@ jobs:
       BYTEBASE_URL: https://miserably-fancy-ostrich.ngrok-free.app
       BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
       BYTEBASE_PROJECT: "projects/cashcard-project"
-      BYTEBASE_TARGETS: "instances/mysql-uat-instance/databases/operator_cashcard,instances/mysql-uat-instance/databases/cashcard,instances/mysql-uateu-instance/databases/cashcard,instances/mysql-uatna-instance/databases/cashcard"
+      BYTEBASE_TARGETS: "instances/mysql-uat-instance/databases/operator_cashcard"
       FILE_PATTERN: "src/main/resources/db/migration/**/*.sql"
     steps:
       - name: Checkout
