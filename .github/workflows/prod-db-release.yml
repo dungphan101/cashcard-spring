@@ -20,7 +20,7 @@ jobs:
   deploy-to-production:
     needs: build
     runs-on: ubuntu-latest # use self-hosted machines if your Bytebase runs in internal networks.
-    environment: uat
+    environment: production
     env:
       BYTEBASE_URL: https://miserably-fancy-ostrich.ngrok-free.app
       BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
