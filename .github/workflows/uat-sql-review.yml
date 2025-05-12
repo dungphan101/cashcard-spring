@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest # use self-hosted machines if your Bytebase runs in internal networks.
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # set GITHUB_TOKEN because the 'Check release' step needs it to comment the pull request with check results.
-      BYTEBASE_URL: https://miserably-fancy-ostrich.ngrok-free.app
+      BYTEBASE_URL: https://positive-robin-similarly.ngrok-free.app
       BYTEBASE_SERVICE_ACCOUNT: cashcard-app@service.bytebase.com
       BYTEBASE_PROJECT: "projects/cashcard-project"
       BYTEBASE_TARGETS: "instances/mysql-uat-instance/databases/operator_cashcard"
