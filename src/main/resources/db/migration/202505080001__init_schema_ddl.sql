@@ -1,4 +1,4 @@
-CREATE TABLE bookmarks
+CREATE TABLE IF NOT EXISTS bookmarks
 (
     id         BIGINT                 NOT NULL,
     title      VARCHAR(200)           NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE bookmarks
     CONSTRAINT pk_bookmarks PRIMARY KEY (id)
 );
 
-CREATE TABLE cash_card
+CREATE TABLE IF NOT EXISTS cash_card
 (
     id    BIGINT AUTO_INCREMENT NOT NULL,
     amount DOUBLE NULL,
