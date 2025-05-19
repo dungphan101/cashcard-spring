@@ -1,4 +1,4 @@
-CREATE TABLE categories
+CREATE TABLE IF NOT EXISTS categories
 (
     id   BIGINT       NOT NULL,
     name VARCHAR(255) NULL,
