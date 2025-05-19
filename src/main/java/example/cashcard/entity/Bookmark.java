@@ -34,11 +34,14 @@ public class Bookmark {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private String status;
 
-    @Column(name = "is_trending", nullable = false)
+    @Column(name = "is_trending")
     private Boolean isTrending;
+
+    @Column(name = "is_sale")
+    private Boolean isSale;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
